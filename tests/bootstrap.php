@@ -1,7 +1,5 @@
 <?php
 
-apcu_clear_cache();
-
 $file = __DIR__.'/../vendor/autoload.php';
 
 if (! file_exists($file)) {
@@ -9,3 +7,14 @@ if (! file_exists($file)) {
 }
 
 require_once $file;
+
+if (!function_exists('dd')) {
+    function dd()
+    {
+        array_map(function($x) { 
+            dump($x); 
+        }, func_get_args());
+        die;
+    }
+ }
+ 

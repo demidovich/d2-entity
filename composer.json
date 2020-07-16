@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Blues\\": "src/Blues"
+            "Blues\\": "src/"
         }
     },
     "autoload-dev": {

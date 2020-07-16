@@ -2,7 +2,9 @@
 
 namespace Blues;
 
+use ReflectionMethod;
 use ReflectionParameter;
+use RuntimeException;
 
 /**
  * Класс создания модели и ее гидрации данными
@@ -77,10 +79,24 @@ class Hydrator
 //        return self::$reflectMethodParams[$class][$method];
 //    }
 
-    public static function byProperties(string $class, array $data = [])
-    {
+    // Пока это нам не понадобится
+    //
+    // public static function byProperties(string $class, array $data = [])
+    // {
+    //     $refl = new \ReflectionClass(Model::class);
+    //     $prop = $refl->getProperties(\ReflectionProperty::IS_PRIVATE);
+    //     $args = self::filledArgs($prop, $data);
 
-    }
+    //     $item = $refl->newInstanceWithoutConstructor();
+
+    //     foreach ($args as $name = $value) {
+
+    //     }
+
+    //     if ($refl->hasMethod('__construct')) {
+            
+    //     }
+    // }
 
     /**
      * Восстановление модели через конструктор
@@ -88,13 +104,13 @@ class Hydrator
      * 
      * @param type $class
      * @param array $data
-     * @return \R1\Shared\Tools\class
+     * @return mixed
      */
     public static function byConstructor(string $class, array $data = [])
     {
-        $args = self::constructorArgs($class, '__construct', $data);
+        $params = self::params($class, '__construct', $data);
 
-        return new $class(...$args);
+        return new $class(...$params);
     }
 
    /**
@@ -105,33 +121,27 @@ class Hydrator
     * @param type $class
     * @param type $method
     * @param array $data
-    * @return type
+    * @return mixed
     */
-   public static function byStaticConstructor(string $class, string $method, array $data = [])
+   public static function byStatic(string $class, string $method, array $data = [])
    {
-       $args = self::constructorArgs($class, $method, $data);
+       $params = self::params($class, $method, $data);
 
-       return $class::$method(...$args);
+       return $class::$method(...$params);
    }
 
     /**
-     * Используется при построении модели при восстановленни данных
-     * 
-     * Принимается метод класса
-     * Извлекаются аргументы метода
-     * Во входных данных ищутся соответствия данных
-     * Если аргумент ожидает ValueObject создается экземпляр
-     * 
-     * @param type $class Класс модели
-     * @param type $method Метод модели
-     * @param array $data Входные данные
+     * Создание параметров
+     *
+     * @param ReflectionParameter[] $reflectionParams
+     * @param array $data
      * @return array
-     * @throws \LogicException
      */
-    private static function constructorArgs($class, $method, array $data): array
+    private static function params(string $class, string $method, array $data): array
     {
-        $args   = [];
-        $params = (new \ReflectionMethod($class, $method))->getParameters();
+        $reflectionParams = (new ReflectionMethod($class, $method))->getParameters();
+
+        $params = [];
 
         // Кэширование, пока выключено, профит по скорости был минимальный
         // Что с расходом cpu непонятно, нужно потестировать
@@ -139,22 +149,20 @@ class Hydrator
 
         // @todo сообщение exception, объясняющее без trace в каком месте произошел вызов
 
-        foreach ($params as $param) {
-
-            /** @var ReflectionParameter $param */
+        foreach ($reflectionParams as $param) {
 
             $name = $param->getName();
 
             // Exception, если для аргумента метода нет соответствия 
             // во входных данных и в конструкторе нет дефолтного значения
 
-            if (!\array_key_exists($name, $data)) {
+            if (! array_key_exists($name, $data)) {
                 if ($param->isOptional()) {
                     $value = $param->getDefaultValue();
                 } else {
-                    throw new \LogicException(
-                        "Ошибка гидрации $class::$method. 
-                         Аргумент метода $name не имеет значения по-умолчанию и отсутствует во входных данных"
+                    throw new RuntimeException(
+                        "Ошибка гидрации $class::$method. " .
+                        "Аргумент метода $name не имеет значения по-умолчанию и отсутствует во входных данных"
                     );
                 }
             } else {
@@ -174,15 +182,79 @@ class Hydrator
             // Без этой проверки будет выполнен с ошибкой new Datetime(null)
             // Принимаем за константу поведение, в котором объект-значение
             // не может быть проинициализирован с null.
-            
+
             if (! is_object($value) && $value !== null && $param->getClass()) {
                 $valueObject = $param->getClass()->name;
                 $value = new $valueObject($value);
             }
 
-            $args[] = $value;
+            $params[] = $value;
         }
 
-        return $args;
+        return $params;
     }
+
+    // /**
+    //  * Создание параметров
+    //  *
+    //  * @param ReflectionParameter[] $reflectionParams
+    //  * @param array $data
+    //  * @return array
+    //  */
+    // private static function params(string $class, string $method, array $data): array
+    // {
+    //     $reflectionParams = (new ReflectionMethod($class, $method))->getParameters();
+
+    //     $params = [];
+
+    //     // Кэширование, пока выключено, профит по скорости был минимальный
+    //     // Что с расходом cpu непонятно, нужно потестировать
+    //     // $params = self::reflectMethodParams($class, $method);
+
+    //     // @todo сообщение exception, объясняющее без trace в каком месте произошел вызов
+
+    //     foreach ($reflectionParams as $param) {
+
+    //         $name = $param->getName();
+
+    //         // Exception, если для аргумента метода нет соответствия 
+    //         // во входных данных и в конструкторе нет дефолтного значения
+
+    //         if (! array_key_exists($name, $data)) {
+    //             if ($param->isOptional()) {
+    //                 $value = $param->getDefaultValue();
+    //             } else {
+    //                 throw new RuntimeException(
+    //                     "Ошибка гидрации $class::$method. " .
+    //                     "Аргумент метода $name не имеет значения по-умолчанию и отсутствует во входных данных"
+    //                 );
+    //             }
+    //         } else {
+    //             $value = $data[$name];
+    //         }
+
+    //         // Если значение не объект, не null и для его атрибута заявлен класс
+    //         // это объект-значение и его нужно проинициализировать 
+    //         // через конструктор с этим $value.
+    //         // 
+    //         // Необязательные объекты-значения конструктора
+    //         // Для возможности написать так 
+    //         // 
+    //         //     __construct(?Datetime $sentAt = null)
+    //         //
+    //         // делаем проверку $value !== null
+    //         // Без этой проверки будет выполнен с ошибкой new Datetime(null)
+    //         // Принимаем за константу поведение, в котором объект-значение
+    //         // не может быть проинициализирован с null.
+
+    //         if (! is_object($value) && $value !== null && $param->getClass()) {
+    //             $valueObject = $param->getClass()->name;
+    //             $value = new $valueObject($value);
+    //         }
+
+    //         $params[] = $value;
+    //     }
+
+    //     return $params;
+    // }
 }

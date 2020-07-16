@@ -9,14 +9,14 @@ help: ## This help
 build: ## Build docker image
 	@docker build --build-arg UID=${UID} --build-arg GID=${GID} --tag php-blues .
 
-rmi: ## Remove docker image
-	@docker rmi php-blues
+up: build ## Start container
+	@docker run --rm -d --name php-blues -v $(PWD):/app --user ${UID}:${GID} php-blues
 
-vendor: ## Install composer vendors
-	@docker run --rm -t -v $(PWD):/app --user ${UID}:${GID} php-blues composer update
+down: ## Start container
+	@docker stop php-blues
 
-test: ## Run tests
-	@docker run --rm -t -v $(PWD):/app --user ${UID}:${GID} php-blues /app/vendor/bin/phpunit $^
+rmi: down ## Remove docker image
+	@docker rmi -f php-blues
 
 shell: ## Shell of php container
-	@docker run --rm -ti -v $(PWD):/app --user ${UID}:${GID} php-blues /bin/bash
+	@docker exec -ti --user ${UID}:${GID} php-blues /bin/bash

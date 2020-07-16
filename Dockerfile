@@ -22,6 +22,6 @@ USER "www-data"
 
 WORKDIR /app
 
-# CMD ["/usr/sbin/php-fpm7.4", "-F" ]
+CMD ["/usr/sbin/php-fpm7.4", "-F" ]
 
-# EXPOSE 9000
+EXPOSE 9000

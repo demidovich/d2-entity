@@ -62,130 +62,84 @@ use RuntimeException;
 
 class Hydrator
 {
-// Кэширование выключено
-// Без него меньше расход памяти, по скорости выигрыш незначительный
-// По cpu непонятно, проверить
-// 
-//    protected static $reflectMethodParams = [];
-//
-//    protected static function reflectMethodParams($class, $method): array
-//    {
-//        if (! isset(self::$reflectMethodParams[$class][$method])) {
-//            $reflection = new \ReflectionMethod($class, $method);
-//            self::$reflectMethodParams[$class][$method] = $reflection->getParameters();
-//            //self::$reflectMethodParams[$class][$method] = new \ReflectionMethod($class, $method);
-//        }
-//
-//        return self::$reflectMethodParams[$class][$method];
-//    }
+    private $class;
+    private $method = null;
 
-    // Пока это нам не понадобится
-    //
-    // public static function byProperties(string $class, array $data = [])
-    // {
-    //     $refl = new \ReflectionClass(Model::class);
-    //     $prop = $refl->getProperties(\ReflectionProperty::IS_PRIVATE);
-    //     $args = self::filledArgs($prop, $data);
-
-    //     $item = $refl->newInstanceWithoutConstructor();
-
-    //     foreach ($args as $name = $value) {
-
-    //     }
-
-    //     if ($refl->hasMethod('__construct')) {
-            
-    //     }
-    // }
+    public function __construct(string $class)
+    {
+        $this->class = $class;
+    }
 
     /**
-     * Восстановление модели через конструктор
-     * В основном при получении данных из базы
+     * Create instance by constructor
      * 
      * @param type $class
      * @param array $data
      * @return mixed
      */
-    public static function byConstructor(string $class, array $data = [])
+    public function byConstructor(array $data = [])
     {
-        $params = self::params($class, '__construct', $data);
+        $this->method = '__construct';
 
-        return new $class(...$params);
+        $params = $this->params(
+            (new ReflectionMethod($this->class, $this->method))->getParameters(), 
+            $data
+        );
+
+        return new $this->class(...$params);
     }
 
    /**
-    * Восстановление модели через статический метод
-    * Статический конструктор используется только для первичного создания
-    * Оставлено на всякий случай
+    * Create instance by static constructor
     * 
     * @param type $class
     * @param type $method
     * @param array $data
     * @return mixed
     */
-   public static function byStatic(string $class, string $method, array $data = [])
+   public function byStaticConstructor(string $method, array $data = [])
    {
-       $params = self::params($class, $method, $data);
+        $this->method = $method;
 
-       return $class::$method(...$params);
+        $params = $this->params(
+            (new ReflectionMethod($this->class, $this->method))->getParameters(), 
+            $data
+        );
+
+       return $this->class::$method(...$params);
    }
 
     /**
-     * Создание параметров
+     * Build params
      *
      * @param ReflectionParameter[] $reflectionParams
      * @param array $data
      * @return array
      */
-    private static function params(string $class, string $method, array $data): array
+    private function params(array $reflectionParams, array $data): array
     {
-        $reflectionParams = (new ReflectionMethod($class, $method))->getParameters();
-
         $params = [];
-
-        // Кэширование, пока выключено, профит по скорости был минимальный
-        // Что с расходом cpu непонятно, нужно потестировать
-        // $params = self::reflectMethodParams($class, $method);
-
-        // @todo сообщение exception, объясняющее без trace в каком месте произошел вызов
 
         foreach ($reflectionParams as $param) {
 
             $name = $param->getName();
 
-            // Exception, если для аргумента метода нет соответствия 
-            // во входных данных и в конструкторе нет дефолтного значения
+            if ($param->getClass()) {
+                $value = $this->voParam($data, $param, $param->getClass()->name);
+            }
 
-            if (! array_key_exists($name, $data)) {
-                if ($param->isOptional()) {
-                    $value = $param->getDefaultValue();
-                } else {
-                    throw new RuntimeException(
-                        "Ошибка гидрации $class::$method. " .
-                        "Аргумент метода $name не имеет значения по-умолчанию и отсутствует во входных данных"
-                    );
-                }
-            } else {
+            elseif (array_key_exists($name, $data)) {
                 $value = $data[$name];
             }
 
-            // Если значение не объект, не null и для его атрибута заявлен класс
-            // это объект-значение и его нужно проинициализировать 
-            // через конструктор с этим $value.
-            // 
-            // Необязательные объекты-значения конструктора
-            // Для возможности написать так 
-            // 
-            //     __construct(?Datetime $sentAt = null)
-            //
-            // делаем проверку $value !== null
-            // Без этой проверки будет выполнен с ошибкой new Datetime(null)
-            // Принимаем за константу поведение, в котором объект-значение
-            // не может быть проинициализирован с null.
-
-            if (! is_object($value) && $value !== null && $param->getClass()) {
-                $valueObject = $param->getClass()->name;
-                $value = new $valueObject($value);
+            else {
+                if ($param->isOptional()) {
+                    $value = $param->getDefaultValue();
+                } else {
+                    $this->exception(
+                        "Параметр \"{$name}\" не имеет значения по-умолчанию и отсутствует во входных данных"
+                    );
+                }
             }
 
             $params[] = $value;
@@ -193,6 +147,52 @@ class Hydrator
 
         return $params;
     }
+
+    private function voParam(array $data, ReflectionParameter $reflection, string $voClass)
+    {
+        $param = $reflection->getName();
+
+        if (isset($data[$param])) {
+
+            $value = $data[$param];
+
+            if (! is_object($value)) {
+                return new $voClass($value);
+            }
+
+            $actualClass = get_class($value);
+
+            if ($voClass === $actualClass) {
+                return $value;
+            }
+
+            $this->exception(
+                "Для объекта-значения {$voClass} {$param} передан некорректный объект {$actualClass}"
+            );
+        }
+
+        if ($reflection->isOptional()) {
+            return $reflection->getDefaultValue();
+        }
+
+        $this->exception(
+            "Нет данных для создания объекта-значения {$voClass} {$param}"
+        );
+    }
+
+    private function exception(string $message): void
+    {
+        $object = $this->method ? "{$this->class}::{$this->method}" : $this->class;
+
+        throw new RuntimeException(
+            "Ошибка гидрации {$object}. {$message}"
+        );
+    }
+
+    // private function voParam(ReflectionParameter $param, array $data)
+    // {
+    //     $class = $param->getClass()->name;
+    // }
 
     // /**
     //  * Создание параметров

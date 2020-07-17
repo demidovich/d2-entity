@@ -1,5 +1,5 @@
 {
-    "name": "demidovich/php-blues",
+    "name": "demidovich/d2-hydrator",
     "license": "MIT",
     "type": "library",
     "keywords": [
@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Blues\\": "src/"
+            "D2\\": "src/"
         }
     },
     "autoload-dev": {

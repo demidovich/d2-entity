@@ -7,16 +7,16 @@ help: ## This help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 build: ## Build docker image
-	@docker build --build-arg UID=${UID} --build-arg GID=${GID} --tag php-blues .
+	@docker build --build-arg UID=${UID} --build-arg GID=${GID} --tag d2-hydrator .
 
 up: build ## Start container
-	@docker run --rm -d --name php-blues -v $(PWD):/app --user ${UID}:${GID} php-blues
+	@docker run --rm -d --name d2-hydrator -v $(PWD):/app --user ${UID}:${GID} d2-hydrator
 
 down: ## Start container
-	@docker stop php-blues
+	@docker stop d2-hydrator
 
 rmi: down ## Remove docker image
-	@docker rmi -f php-blues
+	@docker rmi -f d2-hydrator
 
 shell: ## Shell of php container
-	@docker exec -ti --user ${UID}:${GID} php-blues /bin/bash
+	@docker exec -ti --user ${UID}:${GID} d2-hydrator /bin/bash

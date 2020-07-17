@@ -1,6 +1,6 @@
 <?php
 
-namespace Blues;
+namespace D2;
 
 use ReflectionMethod;
 use ReflectionParameter;

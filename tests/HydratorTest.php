@@ -3,7 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use Blues\Hydrator;
+use D2\Hydrator;
 use Tests\Stub\Model;
 use Tests\Stub\ModelId;
 

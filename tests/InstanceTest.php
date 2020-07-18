@@ -3,11 +3,11 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use D2\Hydrator;
+use D2\Instance;
 use Tests\Stub\Model;
 use Tests\Stub\ModelId;
 
-class HydratorTest extends TestCase
+class InstanceTest extends TestCase
 {
     public function test_constructor()
     {
@@ -17,7 +17,7 @@ class HydratorTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        $instance = (new Hydrator(Model::class))->byConstructor($params);
+        $instance = Instance::byConstructor(Model::class, $params);
 
         $this->instance_asserts($instance, $params);
     }
@@ -30,7 +30,7 @@ class HydratorTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        $instance = (new Hydrator(Model::class))->byStaticConstructor('create', $params);
+        $instance = Instance::byStaticConstructor(Model::class, 'create', $params);
 
         $this->instance_asserts($instance, $params);
     }

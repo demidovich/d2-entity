@@ -17,9 +17,9 @@ class InstanceTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        $instance = Instance::byConstructor(Model::class, $params);
+        $model = Instance::byConstructor(Model::class, $params);
 
-        $this->instance_asserts($instance, $params);
+        $this->instance_asserts($model, $params);
     }
 
     public function test_static_constructor()
@@ -30,9 +30,9 @@ class InstanceTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        $instance = Instance::byStaticConstructor(Model::class, 'create', $params);
+        $model = Instance::byStaticConstructor(Model::class, 'create', $params);
 
-        $this->instance_asserts($instance, $params);
+        $this->instance_asserts($model, $params);
     }
 
     private function instance_asserts(Model $instance, array $params)
@@ -56,5 +56,19 @@ class InstanceTest extends TestCase
         $this->assertNull($instance->nullablePrimitiveId());
 
         $this->assertNull($instance->nullableAddress());
+    }
+
+    public function test_constructor_value_object()
+    {
+        $id = ModelId::fromPrimitive(100);
+
+        $model = Instance::byConstructor(Model::class, [
+            'id' => $id,
+            'primitive_id' => 200,
+            'primitive_string' => 'string'
+        ]);
+
+        $this->assertInstanceOf(ModelId::class, $model->id());
+        $this->assertTrue($model->id()->equalsTo($id));
     }
 }

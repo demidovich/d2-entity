@@ -1,10 +1,8 @@
-[![Build Status](https://travis-ci.com/demidovich/d2-instance.svg?branch=master)](https://travis-ci.com/demidovich/d2-instance) [![codecov](https://codecov.io/gh/demidovich/d2-instance/branch/master/graph/badge.svg)](https://codecov.io/gh/demidovich/d2-instance)
-
 ## d2 instance
 
 Creating an instance of an object with the casted parameters.
 
-```
+```php
 class UserId
 {
     private $value;

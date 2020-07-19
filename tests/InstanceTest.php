@@ -5,6 +5,7 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use D2\Instance;
 use Tests\Stub\Model;
+use Tests\Stub\ModelAddress;
 use Tests\Stub\ModelId;
 
 class InstanceTest extends TestCase
@@ -54,7 +55,6 @@ class InstanceTest extends TestCase
         $this->assertEquals('string', $primitiveString);
 
         $this->assertNull($instance->nullablePrimitiveId());
-
         $this->assertNull($instance->nullableAddress());
     }
 
@@ -70,5 +70,19 @@ class InstanceTest extends TestCase
 
         $this->assertInstanceOf(ModelId::class, $model->id());
         $this->assertTrue($model->id()->equalsTo($id));
+    }
+
+    public function test_constructor_prefix()
+    {
+        $params = [
+            'address_city'   => 'Moscow',
+            'address_street' => 'Krasnaya',
+        ];
+
+        $address = Instance::byConstructor(ModelAddress::class, $params, 'address_');
+
+        $this->assertInstanceOf(ModelAddress::class, $address);
+        $this->assertEquals($params['address_city'], $address->city());
+        $this->assertEquals($params['address_street'], $address->street());
     }
 }

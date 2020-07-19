@@ -11,11 +11,12 @@ class Instance
      * 
      * @param type $class
      * @param array $data
+     * @param string $prefix Data fields prefix
      * @return mixed
      */
-    public static function byConstructor(string $class, array $data = [])
+    public static function byConstructor(string $class, array $data = [], ?string $prefix = null)
     {
-        $params = (new Params($class, '__construct'))->casted($data);
+        $params = (new Params($class, '__construct'))->casted($data, $prefix);
 
         return new $class(...$params);
     }
@@ -26,11 +27,12 @@ class Instance
     * @param type $class
     * @param type $method
     * @param array $data
+    * @param string $prefix Data fields prefix
     * @return mixed
     */
-    public static function byStaticConstructor(string $class, string $method, array $data = [])
+    public static function byStaticConstructor(string $class, string $method, array $data = [], ?string $prefix = null)
     {
-        $params = (new Params($class, $method))->casted($data);
+        $params = (new Params($class, $method))->casted($data, $prefix);
 
         return $class::$method(...$params);
     }

@@ -22,19 +22,20 @@ class Params
      *
      * @param ReflectionParameter[] $reflectionParams
      * @param array $data
+     * @param string $prefix Data fields prefix
      * @return array
      */
-    public function casted(array $data): array
+    public function casted(array $data, ?string $prefix = null): array
     {
-        $params = [];
+        $casted = [];
         $reflection = (new ReflectionMethod($this->class, $this->method))->getParameters();
 
         foreach ($reflection as $param) {
 
-            $name = $param->getName();
+            $name = "{$prefix}{$param->getName()}";
 
             if ($param->getClass()) {
-                $value = $this->valueObject($data, $param, $param->getClass()->name);
+                $value = $this->valueObject($data, $name, $param);
             }
 
             elseif (array_key_exists($name, $data)) {
@@ -51,15 +52,15 @@ class Params
                 }
             }
 
-            $params[] = $value;
+            $casted[] = $value;
         }
 
-        return $params;
+        return $casted;
     }
 
-    private function valueObject(array $data, ReflectionParameter $reflection, string $voClass)
+    private function valueObject(array $data, string $param, ReflectionParameter $reflection)
     {
-        $param = $reflection->getName();
+        $voClass = $reflection->getClass()->name;
 
         if (isset($data[$param])) {
 

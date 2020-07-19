@@ -4,6 +4,7 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use D2\ModelBuilder;
+use Exception;
 use Tests\Stub\Model;
 use Tests\Stub\ModelAddress;
 use Tests\Stub\ModelId;
@@ -84,5 +85,31 @@ class ModelBuilderTest extends TestCase
         $this->assertInstanceOf(ModelAddress::class, $address);
         $this->assertEquals($params['address_city'], $address->city());
         $this->assertEquals($params['address_street'], $address->street());
+    }
+
+    public function test_missing_primitive_param_exception()
+    {
+        $this->expectException(Exception::class);
+
+        $params = [
+            'id' => 100,
+            'primitive_id___' => 200,
+            'primitive_string' => 'string'
+        ];
+
+        ModelBuilder::byConstructor(Model::class, $params);
+    }
+
+    public function test_missing_value_object_param_exception()
+    {
+        $this->expectException(Exception::class);
+
+        $params = [
+            'id___' => 100,
+            'primitive_id' => 200,
+            'primitive_string' => 'string'
+        ];
+
+        ModelBuilder::byConstructor(Model::class, $params);
     }
 }

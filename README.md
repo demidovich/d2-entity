@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/demidovich/d2-model-builder.svg?branch=master)](https://travis-ci.com/demidovich/d2-model-builder) [![codecov](https://codecov.io/gh/demidovich/d2-model-builder/branch/master/graph/badge.svg)](https://codecov.io/gh/demidovich/d2-model-builder)
+
 ## d2 instance
 
 Creating an instance of an object with the casted parameters.

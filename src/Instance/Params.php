@@ -6,7 +6,7 @@ use ReflectionMethod;
 use ReflectionParameter;
 use RuntimeException;
 
-class Params1
+class Params
 {
     private $class;
     private $method;
@@ -58,50 +58,15 @@ class Params1
         return $casted;
     }
 
-    // private function valueObject(array $data, string $param, ReflectionParameter $reflection)
-    // {
-    //     $voClass = $reflection->getClass()->name;
-
-    //     if (isset($data[$param])) {
-
-    //         $value = $data[$param];
-
-    //         if (! is_object($value)) {
-    //             return new $voClass($value);
-    //         }
-
-    //         $actualClass = get_class($value);
-
-    //         if ($voClass === $actualClass) {
-    //             return $value;
-    //         }
-
-    //         $this->exception(
-    //             "Для объекта-значения {$voClass} {$param} передан некорректный объект {$actualClass}"
-    //         );
-    //     }
-
-    //     if ($reflection->isOptional()) {
-    //         return $reflection->getDefaultValue();
-    //     }
-
-    //     $this->exception(
-    //         "Нет данных для создания объекта-значения {$voClass} {$param}"
-    //     );
-    // }
-
     private function valueObject(array $data, string $param, ReflectionParameter $reflection)
     {
         $voClass = $reflection->getClass()->name;
 
         if (isset($data[$param])) {
-
             $value = $data[$param];
-
             if (! is_object($value)) {
                 $value = new $voClass($value);
             }
-
             return $value;
         }
 

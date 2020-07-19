@@ -2,8 +2,7 @@
 
 namespace D2;
 
-use D2\Instance\Params1 as Params;
-//use D2\Instance\Params2 as Params;
+use D2\Instance\Params;
 
 class Instance
 {

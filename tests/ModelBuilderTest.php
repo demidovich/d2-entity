@@ -3,12 +3,12 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use D2\Instance;
+use D2\ModelBuilder;
 use Tests\Stub\Model;
 use Tests\Stub\ModelAddress;
 use Tests\Stub\ModelId;
 
-class InstanceTest extends TestCase
+class ModelBuilderTest extends TestCase
 {
     public function test_constructor()
     {
@@ -18,7 +18,7 @@ class InstanceTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        $model = Instance::byConstructor(Model::class, $params);
+        $model = ModelBuilder::byConstructor(Model::class, $params);
 
         $this->instance_asserts($model, $params);
     }
@@ -31,7 +31,7 @@ class InstanceTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        $model = Instance::byStaticConstructor(Model::class, 'create', $params);
+        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', $params);
 
         $this->instance_asserts($model, $params);
     }
@@ -62,7 +62,7 @@ class InstanceTest extends TestCase
     {
         $id = ModelId::fromPrimitive(100);
 
-        $model = Instance::byConstructor(Model::class, [
+        $model = ModelBuilder::byConstructor(Model::class, [
             'id' => $id,
             'primitive_id' => 200,
             'primitive_string' => 'string'
@@ -79,7 +79,7 @@ class InstanceTest extends TestCase
             'address_street' => 'Krasnaya',
         ];
 
-        $address = Instance::byConstructor(ModelAddress::class, $params, 'address_');
+        $address = ModelBuilder::byConstructor(ModelAddress::class, $params, 'address_');
 
         $this->assertInstanceOf(ModelAddress::class, $address);
         $this->assertEquals($params['address_city'], $address->city());

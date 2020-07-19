@@ -1,6 +1,6 @@
 <?php
 
-use D2\Instance;
+use D2\ModelBuilder;
 use Performance\User;
 use Performance\UserAddress;
 use Performance\UserPreferences;
@@ -42,10 +42,10 @@ $build = function() {
         'field5'                         => 'text',
     ];
 
-    $dbRow['address']     = Instance::byConstructor(UserAddress::class, $dbRow, 'address_');
-    $dbRow['preferences'] = Instance::byConstructor(UserPreferences::class, $dbRow, 'preferences_');
+    $dbRow['address']     = ModelBuilder::byConstructor(UserAddress::class, $dbRow, 'address_');
+    $dbRow['preferences'] = ModelBuilder::byConstructor(UserPreferences::class, $dbRow, 'preferences_');
 
-    return Instance::byConstructor(User::class, $dbRow);
+    return ModelBuilder::byConstructor(User::class, $dbRow);
 };
 
 for ($i = 1; $i <= 1000; $i++) {

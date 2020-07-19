@@ -1,6 +1,6 @@
 <?php
 
-namespace D2\Instance;
+namespace D2\ModelBuilder;
 
 use ReflectionMethod;
 use ReflectionParameter;

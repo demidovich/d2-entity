@@ -2,12 +2,12 @@
 
 namespace D2;
 
-use D2\Instance\Params;
+use D2\ModelBuilder\Params;
 
-class Instance
+class ModelBuilder
 {
     /**
-     * Create instance by constructor
+     * Create object by constructor
      * 
      * @param type $class
      * @param array $data
@@ -22,7 +22,7 @@ class Instance
     }
 
    /**
-    * Create instance by static constructor
+    * Create object by static constructor
     * 
     * @param type $class
     * @param type $method

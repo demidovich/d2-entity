@@ -45,7 +45,7 @@ class User
     }
 }
 
-$user = Instance::byConstructor(User::class, [
+$user = ModelBuilder::byConstructor(User::class, [
     'id' => 1,
     'name' => 'Ivan',
     'created_at' => '1970-01-01 00:00:00',

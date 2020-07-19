@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker exec -ti d2-model-builder php /app/performance/performance.php

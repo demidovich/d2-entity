@@ -13,8 +13,8 @@ RUN set -eux \
     && if [ $GID -ne 82 ]; then \
         groupmod -g ${GID} www-data; \
     fi \
-    && chown -R www-data:www-data /composer \
-    && phpenmod -v 7.4 xdebug
+    && chown -R www-data:www-data /composer
+#    && phpenmod -v 7.4 xdebug
 
 RUN chmod u+s /usr/sbin/php-fpm7.4
 

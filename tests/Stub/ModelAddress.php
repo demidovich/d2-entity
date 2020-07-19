@@ -12,4 +12,14 @@ class ModelAddress
         $this->city   = $city;
         $this->street = $street;
     }
+
+    public function city(): string
+    {
+        return $this->city;
+    }
+
+    public function street(): string
+    {
+        return $this->street;
+    }
 }

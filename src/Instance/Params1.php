@@ -6,28 +6,16 @@ use ReflectionMethod;
 use ReflectionParameter;
 use RuntimeException;
 
-class Params
+class Params1
 {
     private $class;
     private $method;
-
-    // private static $cache;
 
     public function __construct(string $class, string $method)
     {
         $this->class  = $class;
         $this->method = $method;
     }
-
-    // protected static function reflectionParamsCached(string $class, string $method): array
-    // {
-    //     if (! isset(self::$cache[$class][$method])) {
-    //         self::$cache[$class][$method] = (new ReflectionMethod($class, $method))->getParameters();
-    //         echo 1;
-    //     }
-
-    //     return self::$cache[$class][$method];
-    // }
 
     /**
      * Build params

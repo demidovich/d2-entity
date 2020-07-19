@@ -80,7 +80,7 @@ class ModelBuilderTest extends TestCase
             'address_street' => 'Krasnaya',
         ];
 
-        $address = ModelBuilder::byConstructor(ModelAddress::class, $params, 'address_');
+        $address = ModelBuilder::byConstructor(ModelAddress::class, $params, 'address');
 
         $this->assertInstanceOf(ModelAddress::class, $address);
         $this->assertEquals($params['address_city'], $address->city());

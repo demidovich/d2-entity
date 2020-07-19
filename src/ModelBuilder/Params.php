@@ -29,6 +29,7 @@ class Params
     {
         $casted = [];
         $reflection = (new ReflectionMethod($this->class, $this->method))->getParameters();
+        $prefix = $prefix ? "{$prefix}_" : "";
 
         foreach ($reflection as $param) {
 

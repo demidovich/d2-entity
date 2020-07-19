@@ -42,8 +42,8 @@ $build = function() {
         'field5'                         => 'text',
     ];
 
-    $dbRow['address']     = ModelBuilder::byConstructor(UserAddress::class, $dbRow, 'address_');
-    $dbRow['preferences'] = ModelBuilder::byConstructor(UserPreferences::class, $dbRow, 'preferences_');
+    $dbRow['address']     = ModelBuilder::byConstructor(UserAddress::class, $dbRow, 'address');
+    $dbRow['preferences'] = ModelBuilder::byConstructor(UserPreferences::class, $dbRow, 'preferences');
 
     return ModelBuilder::byConstructor(User::class, $dbRow);
 };

@@ -11,11 +11,23 @@ class Params
     private $class;
     private $method;
 
+    // private static $cache;
+
     public function __construct(string $class, string $method)
     {
         $this->class  = $class;
         $this->method = $method;
     }
+
+    // protected static function reflectionParamsCached(string $class, string $method): array
+    // {
+    //     if (! isset(self::$cache[$class][$method])) {
+    //         self::$cache[$class][$method] = (new ReflectionMethod($class, $method))->getParameters();
+    //         echo 1;
+    //     }
+
+    //     return self::$cache[$class][$method];
+    // }
 
     /**
      * Build params
@@ -42,14 +54,14 @@ class Params
                 $value = $data[$name];
             }
 
+            elseif ($param->isOptional()) {
+                $value = $param->getDefaultValue();      
+            }
+
             else {
-                if ($param->isOptional()) {
-                    $value = $param->getDefaultValue();
-                } else {
-                    $this->exception(
-                        "Параметр \"{$name}\" не имеет значения по-умолчанию и отсутствует во входных данных"
-                    );
-                }
+                $this->exception(
+                    "Параметр \"{$name}\" не имеет значения по-умолчанию и отсутствует во входных данных"
+                );
             }
 
             $casted[] = $value;
@@ -57,6 +69,38 @@ class Params
 
         return $casted;
     }
+
+    // private function valueObject(array $data, string $param, ReflectionParameter $reflection)
+    // {
+    //     $voClass = $reflection->getClass()->name;
+
+    //     if (isset($data[$param])) {
+
+    //         $value = $data[$param];
+
+    //         if (! is_object($value)) {
+    //             return new $voClass($value);
+    //         }
+
+    //         $actualClass = get_class($value);
+
+    //         if ($voClass === $actualClass) {
+    //             return $value;
+    //         }
+
+    //         $this->exception(
+    //             "Для объекта-значения {$voClass} {$param} передан некорректный объект {$actualClass}"
+    //         );
+    //     }
+
+    //     if ($reflection->isOptional()) {
+    //         return $reflection->getDefaultValue();
+    //     }
+
+    //     $this->exception(
+    //         "Нет данных для создания объекта-значения {$voClass} {$param}"
+    //     );
+    // }
 
     private function valueObject(array $data, string $param, ReflectionParameter $reflection)
     {
@@ -67,18 +111,10 @@ class Params
             $value = $data[$param];
 
             if (! is_object($value)) {
-                return new $voClass($value);
+                $value = new $voClass($value);
             }
 
-            $actualClass = get_class($value);
-
-            if ($voClass === $actualClass) {
-                return $value;
-            }
-
-            $this->exception(
-                "Для объекта-значения {$voClass} {$param} передан некорректный объект {$actualClass}"
-            );
+            return $value;
         }
 
         if ($reflection->isOptional()) {

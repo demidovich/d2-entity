@@ -11,33 +11,41 @@ use Tests\Stub\ModelId;
 
 class ModelBuilderTest extends TestCase
 {
-    public function test_constructor()
+    private $params = [
+        'id' => 100,
+        'primitive_id' => 200,
+        'primitive_string' => 'string'
+    ];
+
+    public function test_constructor_by_array()
     {
-        $params = [
-            'id' => 100,
-            'primitive_id' => 200,
-            'primitive_string' => 'string'
-        ];
+        $model = ModelBuilder::byConstructor(Model::class, $this->params);
 
-        $model = ModelBuilder::byConstructor(Model::class, $params);
-
-        $this->instance_asserts($model, $params);
+        $this->instance_asserts($model, $this->params);
     }
 
-    public function test_static_constructor()
+    public function test_constructor_by_object()
     {
-        $params = [
-            'id' => 100,
-            'primitive_id' => 200,
-            'primitive_string' => 'string'
-        ];
+        $model = ModelBuilder::byConstructor(Model::class, (object) $this->params);
 
-        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', $params);
-
-        $this->instance_asserts($model, $params);
+        $this->instance_asserts($model, $this->params);
     }
 
-    private function instance_asserts(Model $instance, array $params)
+    public function test_static_constructor_by_array()
+    {
+        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', $this->params);
+
+        $this->instance_asserts($model, $this->params);
+    }
+
+    public function test_static_constructor_by_object()
+    {
+        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', $this->params);
+
+        $this->instance_asserts($model, $this->params);
+    }
+
+    private function instance_asserts(Model $instance, $params)
     {
         $id = ModelId::fromPrimitive($params['id']);
 

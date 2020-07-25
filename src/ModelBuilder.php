@@ -10,12 +10,16 @@ class ModelBuilder
      * Create object by constructor
      * 
      * @param type $class
-     * @param array $data
+     * @param midex $data Array or object
      * @param string $prefix Data fields prefix
      * @return mixed
      */
-    public static function byConstructor(string $class, array $data = [], ?string $prefix = null)
+    public static function byConstructor(string $class, $data, ?string $prefix = null)
     {
+        if (! is_array($data)) {
+            $data = (array) $data;
+        }
+
         $params = (new Params($class, '__construct'))->casted($data, $prefix);
 
         return new $class(...$params);
@@ -26,12 +30,16 @@ class ModelBuilder
     * 
     * @param type $class
     * @param type $method
-    * @param array $data
+    * @param mixed $data Array or object
     * @param string $prefix Data fields prefix
     * @return mixed
     */
-    public static function byStaticConstructor(string $class, string $method, array $data = [], ?string $prefix = null)
+    public static function byStaticConstructor(string $class, string $method, $data, ?string $prefix = null)
     {
+        if (! is_array($data)) {
+            $data = (array) $data;
+        }
+
         $params = (new Params($class, $method))->casted($data, $prefix);
 
         return $class::$method(...$params);

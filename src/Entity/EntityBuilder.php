@@ -1,10 +1,10 @@
 <?php
 
-namespace D2;
+namespace D2\Entity;
 
-use D2\ModelBuilder\Params;
+use D2\Entity\EntityBuilder\Params;
 
-class ModelBuilder
+class EntityBuilder
 {
     /**
      * Create object by constructor

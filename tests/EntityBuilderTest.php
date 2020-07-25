@@ -3,13 +3,13 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use D2\ModelBuilder;
+use D2\Entity\EntityBuilder;
 use Exception;
 use Tests\Stub\Model;
 use Tests\Stub\ModelAddress;
 use Tests\Stub\ModelId;
 
-class ModelBuilderTest extends TestCase
+class EntityBuilderTest extends TestCase
 {
     private $params = [
         'id' => 100,
@@ -19,28 +19,28 @@ class ModelBuilderTest extends TestCase
 
     public function test_constructor_by_array()
     {
-        $model = ModelBuilder::byConstructor(Model::class, $this->params);
+        $model = EntityBuilder::byConstructor(Model::class, $this->params);
 
         $this->instance_asserts($model, $this->params);
     }
 
     public function test_constructor_by_object()
     {
-        $model = ModelBuilder::byConstructor(Model::class, (object) $this->params);
+        $model = EntityBuilder::byConstructor(Model::class, (object) $this->params);
 
         $this->instance_asserts($model, $this->params);
     }
 
     public function test_static_constructor_by_array()
     {
-        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', $this->params);
+        $model = EntityBuilder::byStaticConstructor(Model::class, 'create', $this->params);
 
         $this->instance_asserts($model, $this->params);
     }
 
     public function test_static_constructor_by_object()
     {
-        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', (object) $this->params);
+        $model = EntityBuilder::byStaticConstructor(Model::class, 'create', (object) $this->params);
 
         $this->instance_asserts($model, $this->params);
     }
@@ -71,7 +71,7 @@ class ModelBuilderTest extends TestCase
     {
         $id = ModelId::fromPrimitive(100);
 
-        $model = ModelBuilder::byConstructor(Model::class, [
+        $model = EntityBuilder::byConstructor(Model::class, [
             'id' => $id,
             'primitive_id' => 200,
             'primitive_string' => 'string'
@@ -88,7 +88,7 @@ class ModelBuilderTest extends TestCase
             'address_street' => 'Krasnaya',
         ];
 
-        $address = ModelBuilder::byConstructor(ModelAddress::class, $params, 'address');
+        $address = EntityBuilder::byConstructor(ModelAddress::class, $params, 'address');
 
         $this->assertInstanceOf(ModelAddress::class, $address);
         $this->assertEquals($params['address_city'], $address->city());
@@ -105,7 +105,7 @@ class ModelBuilderTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        ModelBuilder::byConstructor(Model::class, $params);
+        EntityBuilder::byConstructor(Model::class, $params);
     }
 
     public function test_missing_value_object_param_exception()
@@ -118,6 +118,6 @@ class ModelBuilderTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        ModelBuilder::byConstructor(Model::class, $params);
+        EntityBuilder::byConstructor(Model::class, $params);
     }
 }

@@ -7,16 +7,16 @@ help: ## This help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 build: ## Build docker image
-	@docker build --build-arg UID=${UID} --build-arg GID=${GID} --tag d2-model-builder .
+	@docker build --build-arg UID=${UID} --build-arg GID=${GID} --tag d2-entity .
 
 up: build ## Start container
-	@docker run --rm -d --name d2-model-builder -v $(PWD):/app --user ${UID}:${GID} d2-model-builder
+	@docker run --rm -d --name d2-entity -v $(PWD):/app --user ${UID}:${GID} d2-entity
 
 down: ## Start container
-	@docker stop d2-model-builder
+	@docker stop d2-entity
 
 rmi: down ## Remove docker image
-	@docker rmi -f d2-model-builder
+	@docker rmi -f d2-entity
 
 shell: ## Shell of php container
-	@docker exec -ti --user ${UID}:${GID} d2-model-builder /bin/bash
+	@docker exec -ti --user ${UID}:${GID} d2-entity /bin/bash

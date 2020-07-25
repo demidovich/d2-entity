@@ -40,7 +40,7 @@ class ModelBuilderTest extends TestCase
 
     public function test_static_constructor_by_object()
     {
-        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', $this->params);
+        $model = ModelBuilder::byStaticConstructor(Model::class, 'create', (object) $this->params);
 
         $this->instance_asserts($model, $this->params);
     }

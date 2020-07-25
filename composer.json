@@ -1,12 +1,12 @@
 {
-    "name": "demidovich/d2-model-builder",
+    "name": "demidovich/d2-entity",
     "license": "MIT",
     "type": "library",
     "keywords": [
         "php",
-        "model builder",
         "ddd",
-        "domain driven design"
+        "domain driven design",
+        "entity builder"
     ],
     "autoload": {
         "psr-4": {

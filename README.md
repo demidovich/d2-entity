@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/demidovich/d2-model-builder.svg?branch=master)](https://travis-ci.com/demidovich/d2-model-builder) [![codecov](https://codecov.io/gh/demidovich/d2-model-builder/branch/master/graph/badge.svg)](https://codecov.io/gh/demidovich/d2-model-builder)
+[![Build Status](https://travis-ci.org/demidovich/d2-entity.svg?branch=master)](https://travis-ci.com/demidovich/d2-entity) [![codecov](https://codecov.io/gh/demidovich/d2-entity/branch/master/graph/badge.svg)](https://codecov.io/gh/demidovich/d2-entity)
 
-## d2 model builder
+## d2 entity
 
-Simple builder of models or value objects from primitives.
+Simple builder of domain entities or value objects from primitives and value objects.
 
 ```php
 class UserId
@@ -57,7 +57,7 @@ $dbRow = [
     'address_house'  => '1',
 ];
 
-$dbRow['address'] = ModelBuilder::byConstructor(UserAddress::class, $dbRow, 'address');
+$dbRow['address'] = EntityBuilder::byConstructor(UserAddress::class, $dbRow, 'address');
 
-$user = ModelBuilder::byConstructor(User::class, $dbRow);
+$user = EntityBuilder::byConstructor(User::class, $dbRow);
 ```

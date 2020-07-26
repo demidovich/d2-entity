@@ -2,7 +2,7 @@
 
 namespace Tests\Stub;
 
-class ModelId
+class EntityId
 {
     private int $value;
 

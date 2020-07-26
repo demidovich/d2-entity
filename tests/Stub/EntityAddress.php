@@ -2,7 +2,7 @@
 
 namespace Tests\Stub;
 
-class ModelAddress
+class EntityAddress
 {
     private $city;
     private $street;

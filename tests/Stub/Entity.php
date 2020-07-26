@@ -2,23 +2,23 @@
 
 namespace Tests\Stub;
 
-use Tests\Stub\ModelId;
-use Tests\Stub\ModelAddress;
+use Tests\Stub\EntityId;
+use Tests\Stub\EntityAddress;
 
-class Model
+class Entity
 {
-    private ModelId       $id;
+    private EntityId       $id;
     private int           $primitive_id;
     private string        $primitive_string;
     private ?int          $nullable_primitive_id;
-    private ?ModelAddress $nullable_address;
+    private ?EntityAddress $nullable_address;
 
     public function __construct(
-        ModelId       $id,
+        EntityId       $id,
         int           $primitive_id,
         string        $primitive_string,
         ?int          $nullable_primitive_id = null,
-        ?ModelAddress $nullable_address = null
+        ?EntityAddress $nullable_address = null
     ) {
         $this->id                    = $id;
         $this->primitive_id          = $primitive_id;
@@ -33,13 +33,13 @@ class Model
         string $primitive_string
     ): self {
         return new self(
-            ModelId::fromPrimitive($id),
+            EntityId::fromPrimitive($id),
             $primitive_id,
             $primitive_string
         );
     }
 
-    public function id(): ModelId
+    public function id(): EntityId
     {
         return $this->id;
     }
@@ -59,7 +59,7 @@ class Model
         return $this->nullable_primitive_id;
     }
 
-    public function nullableAddress(): ?ModelAddress
+    public function nullableAddress(): ?EntityAddress
     {
         return $this->nullable_address;
     }

@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/demidovich/d2-entity.svg?branch=master)](https://travis-ci.com/demidovich/d2-entity) [![codecov](https://codecov.io/gh/demidovich/d2-entity/branch/master/graph/badge.svg)](https://codecov.io/gh/demidovich/d2-entity)
 
-## d2 entity
+## d2 entity builder
 
-Simple builder of domain entities or value objects from primitives and value objects.
+Simple builder of domain entities from primitives and value objects.
 
 ```php
 class UserId

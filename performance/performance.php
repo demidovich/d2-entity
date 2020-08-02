@@ -1,6 +1,6 @@
 <?php
 
-use D2\EntityBuilder;
+use D2\Entity\EntityBuilder;
 use Performance\User;
 use Performance\UserAddress;
 use Performance\UserPreferences;

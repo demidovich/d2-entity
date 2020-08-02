@@ -19,28 +19,28 @@ class EntityBuilderTest extends TestCase
 
     public function test_constructor_by_array()
     {
-        $entity = EntityBuilder::byConstructor(Entity::class, $this->params);
+        $entity = EntityBuilder::construct(Entity::class, $this->params);
 
         $this->instance_asserts($entity, $this->params);
     }
 
     public function test_constructor_by_object()
     {
-        $entity = EntityBuilder::byConstructor(Entity::class, (object) $this->params);
+        $entity = EntityBuilder::construct(Entity::class, (object) $this->params);
 
         $this->instance_asserts($entity, $this->params);
     }
 
     public function test_static_constructor_by_array()
     {
-        $entity = EntityBuilder::byStaticConstructor(Entity::class, 'create', $this->params);
+        $entity = EntityBuilder::staticConstruct(Entity::class, 'create', $this->params);
 
         $this->instance_asserts($entity, $this->params);
     }
 
     public function test_static_constructor_by_object()
     {
-        $entity = EntityBuilder::byStaticConstructor(Entity::class, 'create', (object) $this->params);
+        $entity = EntityBuilder::staticConstruct(Entity::class, 'create', (object) $this->params);
 
         $this->instance_asserts($entity, $this->params);
     }
@@ -71,7 +71,7 @@ class EntityBuilderTest extends TestCase
     {
         $id = EntityId::fromPrimitive(100);
 
-        $entity = EntityBuilder::byConstructor(Entity::class, [
+        $entity = EntityBuilder::construct(Entity::class, [
             'id' => $id,
             'primitive_id' => 200,
             'primitive_string' => 'string'
@@ -88,7 +88,7 @@ class EntityBuilderTest extends TestCase
             'address_street' => 'Krasnaya',
         ];
 
-        $address = EntityBuilder::byConstructor(EntityAddress::class, $params, 'address');
+        $address = EntityBuilder::construct(EntityAddress::class, $params, 'address');
 
         $this->assertInstanceOf(EntityAddress::class, $address);
         $this->assertEquals($params['address_city'], $address->city());
@@ -105,7 +105,7 @@ class EntityBuilderTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        EntityBuilder::byConstructor(Entity::class, $params);
+        EntityBuilder::construct(Entity::class, $params);
     }
 
     public function test_missing_value_object_param_exception()
@@ -118,6 +118,6 @@ class EntityBuilderTest extends TestCase
             'primitive_string' => 'string'
         ];
 
-        EntityBuilder::byConstructor(Entity::class, $params);
+        EntityBuilder::construct(Entity::class, $params);
     }
 }

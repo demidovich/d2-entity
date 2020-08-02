@@ -14,7 +14,7 @@ class EntityBuilder
      * @param string $prefix Data fields prefix
      * @return mixed
      */
-    public static function byConstructor(string $class, $data, ?string $prefix = null)
+    public static function construct(string $class, $data, ?string $prefix = null)
     {
         if (! is_array($data)) {
             $data = (array) $data;
@@ -34,7 +34,7 @@ class EntityBuilder
     * @param string $prefix Data fields prefix
     * @return mixed
     */
-    public static function byStaticConstructor(string $class, string $method, $data, ?string $prefix = null)
+    public static function staticConstruct(string $class, string $method, $data, ?string $prefix = null)
     {
         if (! is_array($data)) {
             $data = (array) $data;

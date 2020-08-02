@@ -42,10 +42,10 @@ $build = function() {
         'field5'                         => 'text',
     ];
 
-    $dbRow['address']     = EntityBuilder::byConstructor(UserAddress::class, $dbRow, 'address');
-    $dbRow['preferences'] = EntityBuilder::byConstructor(UserPreferences::class, $dbRow, 'preferences');
+    $dbRow['address']     = EntityBuilder::construct(UserAddress::class, $dbRow, 'address');
+    $dbRow['preferences'] = EntityBuilder::construct(UserPreferences::class, $dbRow, 'preferences');
 
-    return EntityBuilder::byConstructor(User::class, $dbRow);
+    return EntityBuilder::construct(User::class, $dbRow);
 };
 
 for ($i = 1; $i <= 1000; $i++) {

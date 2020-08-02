@@ -57,7 +57,7 @@ $dbRow = [
     'address_house'  => '1',
 ];
 
-$dbRow['address'] = EntityBuilder::byConstructor(UserAddress::class, $dbRow, 'address');
+$dbRow['address'] = EntityBuilder::construct(UserAddress::class, $dbRow, 'address');
 
-$user = EntityBuilder::byConstructor(User::class, $dbRow);
+$user = EntityBuilder::construct(User::class, $dbRow);
 ```

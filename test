@@ -2,4 +2,4 @@
 
 cd "$(dirname "$0")"
 
-docker exec -ti d2-entity /app/vendor/bin/phpunit $@
+docker exec -ti d2-entity-builder /app/vendor/bin/phpunit $@

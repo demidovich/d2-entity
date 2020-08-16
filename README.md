@@ -2,7 +2,7 @@
 
 ## d2 entity builder
 
-Simple builder of domain entities from primitives and value objects.
+Simple builder of domain entities from primitives and value objects. Builds an entity by calling a __construct() or static constructor.
 
 ```php
 class UserId

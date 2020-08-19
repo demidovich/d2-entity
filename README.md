@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/demidovich/d2-entity-builder.svg?branch=master)](https://travis-ci.com/demidovich/d2-entity-builder) [![codecov](https://codecov.io/gh/demidovich/d2-entity/branch/master/graph/badge.svg)](https://codecov.io/gh/demidovich/d2-entity)
+[![Build Status](https://travis-ci.com/demidovich/d2-entity-builder.svg?branch=master)](https://travis-ci.com/demidovich/d2-entity-builder) [![codecov](https://codecov.io/gh/demidovich/d2-entity-builder/branch/master/graph/badge.svg)](https://codecov.io/gh/demidovich/d2-entity-builder)
 
 ## d2 entity builder
 

@@ -2,4 +2,8 @@
 
 cd "$(dirname "$0")"
 
-docker run --rm -t -v `pwd`:/app --user ${UID}:${GID} d2-entity composer $@
+if [ -f ~/.composer/auth.json ]; then
+    docker run --rm -t -v `pwd`:/app -v ~/.composer/auth.json:/composer/auth.json --user ${UID}:${GID} d2-entity-builder composer $@
+else
+    docker run --rm -t -v `pwd`:/app --user ${UID}:${GID} d2-entity-builder composer $@
+fi

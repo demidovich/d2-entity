@@ -4,6 +4,7 @@ use D2\Entity\EntityBuilder;
 use Performance\User;
 use Performance\UserAddress;
 use Performance\UserPreferences;
+use Performance\UserFields;
 
 $autoload = __DIR__.'/../vendor/autoload.php';
 
@@ -44,6 +45,7 @@ $build = function() {
 
     $dbRow['address']     = EntityBuilder::construct(UserAddress::class, $dbRow, 'address');
     $dbRow['preferences'] = EntityBuilder::construct(UserPreferences::class, $dbRow, 'preferences');
+    $dbRow['fields']      = EntityBuilder::construct(UserFields::class, $dbRow);
 
     return EntityBuilder::construct(User::class, $dbRow);
 };
